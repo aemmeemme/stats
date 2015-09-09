@@ -1,0 +1,96 @@
+<html>
+<body>
+
+<div id="id01"></div>
+
+<script>
+
+// Create the XHR object.
+function createCORSRequest(method, url) {
+  var xhr = new XMLHttpRequest();
+  
+  if ("withCredentials" in xhr) {
+    // XHR for Chrome/Firefox/Opera/Safari.
+	xhr.open(method, url, true);
+	xhr.responseType = 'text';
+	xhr.setRequestHeader('Access-Control-Allow-Headers', '*');
+	
+    xhr.setRequestHeader('Content-type', 'application/ecmascript');
+	xhr.setRequestHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
+
+	console.log("WITH!")
+	
+	
+  } else if (typeof XDomainRequest != "undefined") {
+    // XDomainRequest for IE.
+    xhr = new XDomainRequest();
+	
+    xhr.open(method, url);
+	xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
+  } else {
+    // CORS not supported.
+	console.log("CORS not supported!")
+    xhr = null;
+  }
+  return xhr;
+}
+
+/*  COPIATI ALTROVE DA http://forum.rejectedsoftware.com/groups/rejectedsoftware.vibed/thread/10500/
+function addACAO(HTTPServerRequest req, HTTPServerResponse res)
+{
+    res.headers["Access-Control-Allow-Origin"] = "*";
+}
+
+function sendOptions(HTTPServerRequest req, HTTPServerResponse res)
+{
+    addACAO(req, res);
+    res.writeBody("");
+}
+ auto router = new URLRouter;
+router.any("*", &addACAO);
+router.match(HTTPMethod.options, "*", &sendOptions);
+
+
+/* FINE */
+
+// Helper method to parse the title tag from the response.
+function getTitle(text) {
+  return text.match('<title>(.*)?</title>')[1];
+}
+
+// Make the actual CORS request.
+function makeCorsRequest() {
+  // All HTML5 Rocks properties support CORS.
+  var url = 'http://www.motogp.com/it/ajax/results/selector/2015.json';
+  var xhr = createCORSRequest('POST', url);
+  var text = null;
+  console.log ("OK!");
+  if (!xhr) {
+    alert('CORS not supported');
+    return;
+  }
+
+  // Response handlers.
+  xhr.onload = function() {
+    text = xhr.responseText;
+    //var title = getTitle(text);
+    //alert('Response from CORS request to ' + text);
+  };
+
+  xhr.onerror = function() {
+    alert('Woops, there was an error making the request.');
+	
+  };
+
+  xhr.send();
+  return text;
+}
+var toparse = makeCorsRequest();
+jsonFile = JSON.parse(toparse);
+document.getElementById("id01").innerHTML = jsonFile.1[0].shortname;
+console.log ("CONVERTITO");
+</script>
+
+</body>
+</html>
