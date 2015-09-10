@@ -75,7 +75,22 @@ function makeCorsRequest() {
   xhr.onload = function() {
     text = xhr.responseText;
     //var title = getTitle(text);
-    //alert('Response from CORS request to ' + text);
+    alert('Response from CORS request to ' + text);
+	
+	text = text.replace('{"1":{"shortname"', '{"tracks":[{"1":{"shortname"');
+	text = text.replace('}}', '}]}');
+	
+	for(i=0;i<19;i++){
+	text = text.replace('[{"'+i+'":', '[');
+	text = text.replace('"},"'+i+'":{"', '"},{"');
+	//console.log(i);
+	}
+	
+	document.getElementById("id01").innerHTML = text;
+jsonFile = JSON.parse(text);
+console.log("bene")
+
+document.getElementById("id01").innerHTML = jsonFile.tracks[0].title;
   };
 
   xhr.onerror = function() {
@@ -84,11 +99,11 @@ function makeCorsRequest() {
   };
 
   xhr.send();
-  return text;
+  
+
 }
 var toparse = makeCorsRequest();
-jsonFile = JSON.parse(toparse);
-document.getElementById("id01").innerHTML = jsonFile.1[0].shortname;
+
 console.log ("CONVERTITO");
 </script>
 
